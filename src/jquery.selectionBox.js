@@ -24,6 +24,7 @@
         defaults = {
             selectContainerClass: 'selection-box',
             optionsContainerClass: 'options',
+            optionContainerClass: 'option',
             selectedOptionClass: 'selected',
             currentContainerClass: 'current',
             defaultText: 'Select an option'
@@ -40,6 +41,8 @@
         this.$selectionBox = undefined;
         this.$options = undefined;
         this.$current = undefined;
+
+        this.state = false;
 
         // jQuery has an extend method which merges the contents of two or
         // more objects, storing the result in the first object. The first object
@@ -75,8 +78,14 @@
 
         var context = { context: this };
 
-        this.$selectionBox.on('click.showOptions', context, function(e) {
-            e.data.context.showList();
+        this.$selectionBox.on('click.toggleOptions', context, function(e) {
+            if(!e.data.context.state) {
+                e.data.context.showList();
+            } else {
+                e.data.context.hideList();
+
+            }
+            
         });
 
         this.$options.children().on('click.selectOption', context, function(e) {
@@ -109,7 +118,7 @@
     SelectionBox.prototype.toggleSelectedOption = function(i) {
         
         if(this.$options.children('.selected').length > 0) {
-            this.$options.children('.selected').removeClass(this.options.selected);
+            this.$options.children('.selected').removeClass('selected');
         }
 
         if(this.$options.children(':selected').length > 0) {
@@ -124,10 +133,12 @@
     };
 
     SelectionBox.prototype.showList = function() {
+        this.state = true;
         this.$options.css('display', 'block');
     };
 
     SelectionBox.prototype.hideList = function() {
+        this.state = false;
         this.$options.css('display', 'none');
     };
 
@@ -139,7 +150,7 @@
 
         this.$el.find('option').each(function(i, el) {
             text = $(el).text();
-            listItem = '<li class="option">'+ text +'</li>';
+            listItem = '<li class="'+options.optionContainerClass+'">'+ text +'</li>';
 
             selectionBox.find('.'+ options.optionsContainerClass)
                 .append(listItem);

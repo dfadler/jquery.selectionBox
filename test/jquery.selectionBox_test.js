@@ -38,6 +38,7 @@
         var defaults = {
             selectContainerClass: 'selection-box',
             optionsContainerClass: 'options',
+            optionContainerClass: 'option',
             selectedOptionClass: 'selected',
             currentContainerClass: 'current',
             defaultText: 'Select an option'
@@ -51,6 +52,7 @@
         var options = {
             selectContainerClass: 'deselection-box',
             optionsContainerClass: 'no-soup-for-you',
+            optionContainerClass: 'not-an-option',
             selectedOptionClass: 'inselected',
             currentContainerClass: 'notCurrent',
             defaultText: 'Select five options'
@@ -127,20 +129,20 @@
         equal(options.css('display'), 'none', 'options container should be hidden');
     });
 
-    test('selection box container should have a click event namespaced to showOptions', function() {
+    test('selection box container should have a click event namespaced to toggleOptions', function() {
         var selectionBox = this.elems.parent(),
             events = selectionBox.data('events'),
             clicks = events.click,
             namespace = false;
 
         for(var i = 0, len = clicks.length; i < len; i += 1) {
-            if(clicks[i].namespace === 'showOptions') {
+            if(clicks[i].namespace === 'toggleOptions') {
                 namespace = true;
                 break;
             }
         }
 
-        equal(namespace, true, 'the selection box container should have a click event with the namespace showOptions');
+        equal(namespace, true, 'the selection box container should have a click event with the namespace toggleOptions');
 
     });
 
@@ -148,9 +150,29 @@
         var selectionBox = this.elems.parent(),
             options = selectionBox.find('.options');
 
-        selectionBox.trigger('click.showOptions');
+        selectionBox.trigger('click.toggleOptions');
 
         equal(options.css('display'), 'block', 'clicking the selection box container should display the options');
+    });
+
+    test('clicking the container should set the options container to display block', function() {
+        var selectionBox = this.elems.parent(),
+            options = selectionBox.find('.options');
+
+        selectionBox.trigger('click.toggleOptions');
+
+        equal(options.css('display'), 'block', 'clicking the selection box container should display the options');
+    });
+
+    test('clicking the container when active should cause the selection box to close', function() {
+        
+       var selectionBox = this.elems.parent(),
+            options = selectionBox.find('.options');
+
+        selectionBox.trigger('click.toggleOptions');
+        selectionBox.trigger('click.toggleOptions');
+
+        equal(options.css('display'), 'none', 'clicking the selection box container should display the options'); 
     });
 
     test('the option containers should have a click event with the namespace selectOption', function() {
@@ -232,7 +254,7 @@
             options = selectionBox.find('.options'),
             option = options.children().last();
 
-        selectionBox.trigger('click.showOptions');
+        selectionBox.trigger('click.toggleOptions');
         option.trigger('click.selectOption');
 
 
