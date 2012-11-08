@@ -1,0 +1,28 @@
+{
+  "name": "jquery.selectionBox",
+  "title": "jQuery Selectionbox",
+  "description": "A simple jQuery plugin for quickly creating styled selection boxes",
+  "version": "0.1.0",
+  "homepage": "https://github.com/dfadler/jquery.selectionBox",
+  "author": {
+    "name": "Dustin Fadler",
+    "email": "dfadler@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:dfadler/jquery.selectionBox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dfadler/jquery.selectionBox/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/dfadler/jquery.selectionBox/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": "*"
+  },
+  "keywords": []
+}
