@@ -31,16 +31,10 @@
         };
 
     // The actual plugin constructor
-
-
     function SelectionBox(element, options) {
 
         this.element = element;
         this.$el = $(element);
-
-        this.$selectionBox = undefined;
-        this.$options = undefined;
-        this.$current = undefined;
 
         this.state = false;
 
@@ -56,119 +50,131 @@
         this.init();
     }
 
-    SelectionBox.prototype.init = function() {
-        // Place initialization logic here
-        // You already have access to the DOM element and the options via the instance,
-        // e.g., this.element and this.options
-        this.wrapElement();
+    SelectionBox.prototype = {
 
-        this.hideSelectElement();
+        init: function() {
+            // Place initialization logic here
+            // You already have access to the DOM element and the options via the instance,
+            // e.g., this.element and this.options
+            this
+                .wrapElement()
+                .hideSelectElement()
+                .attachCurrentContainer()
+                .setDefaultText()
+                .attachList()
+                .populateList()
+                .hideList()
+                .bind();
+        },
 
-        this.attachCurrentContainer();
-        this.setDefaultText();
+        setCurrentContainerText: function(text) {
+            this.$current.text(text);
+        },
 
-        this.attachList();
-        this.populateList();
-        this.hideList();
+        toggleSelectedOption: function(i) {
 
-        this.bind();
-    };
-
-    SelectionBox.prototype.bind = function() {
-
-        var context = { context: this };
-
-        this.$selectionBox.on('click.toggleOptions', context, function(e) {
-            if(!e.data.context.state) {
-                e.data.context.showList();
-            } else {
-                e.data.context.hideList();
-
+            if(this.$options.children('.selected').length > 0) {
+                this.$options.children('.selected').removeClass('selected');
             }
-            
-        });
 
-        this.$options.children().on('click.selectOption', context, function(e) {
+            if(this.$options.children(':selected').length > 0) {
+                this.$options.children(':selected').attr('selected', false);
+            }
 
-            e.stopPropagation();
+            this.$options.children().eq(i).addClass(this.options.selectedOptionClass);
+        },
 
-            var i = $(this).index(),
-                text = $(this).text();
+        selectOption: function(i) {
+            this.$el.children().eq(i).attr('selected', true);
+        },
 
-            e.data.context.selectOption(i);
-            e.data.context.toggleSelectedOption(i);
-            e.data.context.setCurrentContainerText(text);
-            e.data.context.hideList();
-        });
-    };
+        showList: function() {
+            this.state = true;
+            this.$options.css('display', 'block');
+        },
 
-    SelectionBox.prototype.setDefaultText = function() {
-        this.$current.text(this.options.defaultText);
-    };
+        wrapElement: function() {
+            this.$el.wrap('<div class=' + this.options.selectContainerClass + ' />');
+            this.$selectionBox = this.$el.parents('.' + this.options.selectContainerClass);
 
-    SelectionBox.prototype.attachCurrentContainer = function() {
-        this.$selectionBox.append('<div class="'+this.options.currentContainerClass+'" />');
-        this.$current = this.$selectionBox.find('.'+this.options.currentContainerClass);
-    };
+            return this;
+        },
 
-    SelectionBox.prototype.setCurrentContainerText = function(text) {
-        this.$current.text(text);
-    };
+        hideSelectElement: function() {
+            this.$el.css('display', 'none');
 
-    SelectionBox.prototype.toggleSelectedOption = function(i) {
-        
-        if(this.$options.children('.selected').length > 0) {
-            this.$options.children('.selected').removeClass('selected');
+            return this;
+        },
+
+        attachCurrentContainer: function() {
+            this.$selectionBox.append('<div class="' + this.options.currentContainerClass + '" />');
+            this.$current = this.$selectionBox.find('.' + this.options.currentContainerClass);
+
+            return this;
+        },
+
+        setDefaultText: function() {
+            this.$current.text(this.options.defaultText);
+
+            return this;
+        },
+
+        attachList: function() {
+            this.$selectionBox.append('<ul class="' + this.options.optionsContainerClass + '" />');
+            this.$options = this.$selectionBox.find('.' + this.options.optionsContainerClass);
+
+            return this;
+        },
+
+        populateList: function() {
+            var selectionBox = this.$selectionBox,
+                options = this.options,
+                text, listItem;
+
+            this.$el.find('option').each(function(i, el) {
+                text = $(el).text();
+                listItem = '<li class="' + options.optionContainerClass + '">' + text + '</li>';
+
+                selectionBox.find('.' + options.optionsContainerClass).append(listItem);
+            });
+
+            return this;
+        },
+
+        hideList: function() {
+            this.state = false;
+            this.$options.css('display', 'none');
+
+            return this;
+        },
+
+        bind: function() {
+
+            var self = this;
+
+            this.$selectionBox.on('click.toggleOptions', function(e) {
+                if(!self.state) {
+                    self.showList();
+                } else {
+                    self.hideList();
+
+                }
+
+            });
+
+            this.$options.children().on('click.selectOption', function(e) {
+
+                e.stopPropagation();
+
+                var i = $(this).index(),
+                    text = $(this).text();
+
+                self.selectOption(i);
+                self.toggleSelectedOption(i);
+                self.setCurrentContainerText(text);
+                self.hideList();
+            });
         }
-
-        if(this.$options.children(':selected').length > 0) {
-            this.$options.children(':selected').attr('selected', false);
-        }
-
-        this.$options.children().eq(i).addClass(this.options.selectedOptionClass);
-    };
-
-    SelectionBox.prototype.selectOption = function(i) {
-        this.$el.children().eq(i).attr('selected', true);
-    };
-
-    SelectionBox.prototype.showList = function() {
-        this.state = true;
-        this.$options.css('display', 'block');
-    };
-
-    SelectionBox.prototype.hideList = function() {
-        this.state = false;
-        this.$options.css('display', 'none');
-    };
-
-    SelectionBox.prototype.populateList = function() {
-        var selectionBox = this.$selectionBox,
-            options = this.options,
-            text,
-            listItem;
-
-        this.$el.find('option').each(function(i, el) {
-            text = $(el).text();
-            listItem = '<li class="'+options.optionContainerClass+'">'+ text +'</li>';
-
-            selectionBox.find('.'+ options.optionsContainerClass)
-                .append(listItem);
-        });
-    };
-
-    SelectionBox.prototype.attachList = function() {
-        this.$selectionBox.append('<ul class="' + this.options.optionsContainerClass + '" />');
-        this.$options = this.$selectionBox.find('.' + this.options.optionsContainerClass);
-    };
-
-    SelectionBox.prototype.wrapElement = function() {
-        this.$el.wrap('<div class=' + this.options.selectContainerClass + ' />');
-        this.$selectionBox = this.$el.parents('.' + this.options.selectContainerClass);
-    };
-
-    SelectionBox.prototype.hideSelectElement = function() {
-        this.$el.css('display', 'none');
     };
 
     // A really lightweight plugin wrapper around the constructor,
