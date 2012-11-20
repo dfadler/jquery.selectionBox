@@ -48,6 +48,7 @@
         this._name = selectionBox;
 
         this.init();
+        console.log(this);
     }
 
     SelectionBox.prototype = {
