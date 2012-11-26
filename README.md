@@ -55,7 +55,7 @@ Add the script after your stylesheet and jQuery, create your selection box form 
 ```
 
 ## Examples
-_(Coming soon)_
+[http://dfadler.github.com/jquery.selectionBox](http://dfadler.github.com/jquery.selectionBox)
 
-## Release History
-_(Nothing yet)_
+<!-- ## Release History -->
+
