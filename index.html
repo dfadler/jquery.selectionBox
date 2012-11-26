@@ -6,6 +6,53 @@
   <!-- Load local jQuery. This can be overridden with a ?jquery=___ param. -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   <script src="./jquery.selectionBox.js"></script>
+  <style type="text/css">
+    
+      .selection-box {
+        background: url('./selection-box-button.png') 94% 50% no-repeat #565554;
+        width: 272px;
+        height: 38px;
+        line-height: 38px;
+        color: white;
+        font: 700 "Neuton", serif 15px;
+        border: solid 1px #c5c4c5;
+        border-bottom: 0;
+        position: relative; }
+        
+        .selection-box:hover {
+          cursor: pointer; }
+        
+        .selection-box .current {
+          text-transform: uppercase;
+          padding: 0 22px; }
+        
+        .selection-box .options {
+          position: absolute;
+          top: 37px;
+          border: solid 1px #c5c4c5;
+          border-top: 0;
+          color: #565554;
+          padding: 0;
+          margin: 0 0 0 -1px;
+          width: 100%;
+          list-style: none; }
+          
+          .selection-box .options .option {
+            padding: 0 22px;
+            border-top: solid 1px #c5c4c5; }
+            
+            .selection-box .options .option:hover {
+              background: #eeeeee;
+              cursor: pointer; }
+              
+              .selection-box .options .option:hover.selected {
+                background: #ba1623; }
+        
+        .selection-box .selected {
+          background: #ba1623;
+          color: white; }
+
+  </style>
   <script>
     $(function() {
       $('.selection-box').selectionBox();
