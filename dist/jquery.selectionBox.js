@@ -1,4 +1,4 @@
-/*! jQuery Selectionbox - v0.1.0 - 2012-11-10
+/*! jQuery Selectionbox - v0.1.0 - 2012-11-28
 * https://github.com/dfadler/jquery.selectionBox
 * Copyright (c) 2012 Dustin Fadler; Licensed MIT */
 
