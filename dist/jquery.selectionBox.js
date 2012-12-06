@@ -1,4 +1,4 @@
-/*! jQuery Selectionbox - v0.1.0 - 2012-11-28
+/*! jQuery Selectionbox - v0.1.0 - 2012-12-06
 * https://github.com/dfadler/jquery.selectionBox
 * Copyright (c) 2012 Dustin Fadler; Licensed MIT */
 
@@ -82,6 +82,7 @@
 
         selectOption: function(i) {
             this.$el.children().eq(i).attr('selected', true);
+            this.$el.trigger('change');
         },
 
         showList: function() {

@@ -86,6 +86,7 @@
 
         selectOption: function(i) {
             this.$el.children().eq(i).attr('selected', true);
+            this.$el.trigger('change');
         },
 
         showList: function() {
